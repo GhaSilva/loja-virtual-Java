@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,10 +12,13 @@ public class TestaInsercaoComParametro {
 		ConnectionFactory connectionFactory = new ConnectionFactory();
 		Connection connection = connectionFactory.recuperarConexao();
 		
-		Statement stm = connection.createStatement();
+		PreparedStatement stm = connection.prepareStatement("insert into produto(nome, descricao) values(?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
-		//inserindo código MySQL com retorno da id criada
-		stm.execute("insert into produto(nome, descricao) values('" + nome + "', '" + descricao + "')", Statement.RETURN_GENERATED_KEYS);
+		//parametros que vão substituir os "?"
+		stm.setString(1, nome);
+		stm.setString(2, descricao);
+
+		stm.execute();
 		
 		
 		ResultSet rst = stm.getGeneratedKeys();

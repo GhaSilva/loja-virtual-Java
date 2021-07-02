@@ -1,7 +1,7 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class TestaListagem {
 	public static void main(String[] args) throws SQLException {
@@ -10,11 +10,10 @@ public class TestaListagem {
 		//Puxando a conexão via encapsulamento
 		Connection connection = connectionFactory.recuperarConexao();
 			
-		//criando um Statement
-		Statement stm = connection.createStatement();
+		//criando um PreparedStatement
+		PreparedStatement stm = connection.prepareStatement("select * from produto");
 		
-		//Quando o comando SQL retornar uma lista o boleano será true, do contrario false
-		boolean execute = stm.execute("select * from produto");
+		stm.execute();
 		
 		//Com esse método é possivel pegar o conteudo do SQL
 		ResultSet rst = stm.getResultSet();
