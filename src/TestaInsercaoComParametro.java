@@ -11,33 +11,31 @@ public class TestaInsercaoComParametro {
 
 		
 		ConnectionFactory connectionFactory = new ConnectionFactory();
-		Connection connection = connectionFactory.recuperarConexao();
+		try(Connection connection = connectionFactory.recuperarConexao()){
+				
+			
+			
+			//removendo responsabilidade do jdbc para que haja um processo mais seletivo
+			connection.setAutoCommit(false);
+				//Colocando PreparedStatement nos parametros do try, para que não seja necessario o uso do close
+			try(PreparedStatement stm = connection.prepareStatement("insert into produto(nome, descricao) values(?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 		
-		//removendo responsabilidade do jdbc para que haja um processo mais seletivo
-		connection.setAutoCommit(false);
-		
-		try {
-		PreparedStatement stm = connection.prepareStatement("insert into produto(nome, descricao) values(?, ?)", Statement.RETURN_GENERATED_KEYS);
-		
-		adicionarVariavel("Mouse", "Mouse sem fio", stm);
-		adicionarVariavel("SmartTV", "45 polegadas", stm);
-		adicionarVariavel("Rádio", "Rádio de bateria", stm);
-		
-		//Caso não haja nenhum erro na adição dos produtos, eles serão adicionados graças aos produtos
-		connection.commit();
-		
-		
-		stm.close();
-		connection.close();
-		
-		//Caso o try não funcione, a transação irá retornar graças ao rollback
-		}catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ROLLBACK EXECUTADO");
-			connection.rollback();
+			
+			adicionarVariavel("Mouse", "Mouse sem fio", stm);
+			adicionarVariavel("SmartTV", "45 polegadas", stm);
+			adicionarVariavel("Rádio", "Rádio de bateria", stm);
+			
+			//Caso não haja nenhum erro na adição dos produtos, eles serão adicionados graças aos produtos
+			connection.commit();
+			
+			
+			//Caso o try não funcione, a transação irá retornar graças ao rollback
+			}catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ROLLBACK EXECUTADO");
+				connection.rollback();
+			}
 		}
-		
-	
 	}
 
 	private static void adicionarVariavel(String nome, String descricao, PreparedStatement stm)
@@ -51,14 +49,12 @@ public class TestaInsercaoComParametro {
 		stm.execute();
 		
 		
-		ResultSet rst = stm.getGeneratedKeys();
-		
-		while(rst.next()) {
-			Integer id = rst.getInt(1);
-			System.out.println("O ID criado foi: " + id);
+		try(ResultSet rst = stm.getGeneratedKeys()){
+			while(rst.next()) {
+				Integer id = rst.getInt(1);
+				System.out.println("O ID criado foi: " + id);
+			}
 		}
-		
 	}
-
 }
 

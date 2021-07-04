@@ -5,9 +5,9 @@ import java.sql.SQLException;
 public class TestaRemocao {
 	public static void main(String[] args) throws SQLException {
 		ConnectionFactory connectionFactory = new ConnectionFactory();
-		Connection connection = connectionFactory.recuperarConexao();
+		try(Connection connection = connectionFactory.recuperarConexao()){
 		
-		PreparedStatement stm = connection.prepareStatement("delete from produto where id > ?");
+		try(PreparedStatement stm = connection.prepareStatement("delete from produto where id > ?")){
 		stm.setInt(1, 2);
 		stm.execute();
 		
@@ -15,6 +15,7 @@ public class TestaRemocao {
 		
 		System.out.println(linhasModificadas + " linhas foram modificadas");
 		
-		connection.close();
+			}
+		}
 	}
 }

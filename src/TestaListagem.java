@@ -8,15 +8,15 @@ public class TestaListagem {
 		
 		ConnectionFactory connectionFactory = new ConnectionFactory();
 		//Puxando a conexão via encapsulamento
-		Connection connection = connectionFactory.recuperarConexao();
+		try(Connection connection = connectionFactory.recuperarConexao()){
 			
 		//criando um PreparedStatement
-		PreparedStatement stm = connection.prepareStatement("select * from produto");
+		try(PreparedStatement stm = connection.prepareStatement("select * from produto")){
 		
 		stm.execute();
 		
 		//Com esse método é possivel pegar o conteudo do SQL
-		ResultSet rst = stm.getResultSet();
+		try(ResultSet rst = stm.getResultSet()){
 		
 		//Laço usado pra imprimir o conteudo da lista no banco de dados
 		while(rst.next()) {
@@ -26,7 +26,9 @@ public class TestaListagem {
 			System.out.println(nome);
 			String descricao = rst.getString(3);
 			System.out.println(descricao);
+					}
+				}
+			}
 		}
-		connection.close();
 	}
 }
