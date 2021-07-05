@@ -17,6 +17,9 @@ public class ConnectionFactory {
 		comboPooledDataSource.setUser("root");
 		comboPooledDataSource.setPassword("200305Gh.");
 		
+		//Definindo o maximo de conexões possiveis
+		comboPooledDataSource.setMaxPoolSize(15);
+		
 		this.dataSource = comboPooledDataSource;
 	}
 	
