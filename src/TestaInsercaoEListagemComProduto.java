@@ -20,6 +20,6 @@ public class TestaInsercaoEListagemComProduto {
 			List<Produto> listaDeProdutos = produtoDAO.listar();
 			listaDeProdutos.stream().forEach(lp -> System.out.println(lp));
 			
-			}
+		}
 	}
 }
