@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.ghabriel.jdbc.modelo.Produto;
 
@@ -17,6 +19,8 @@ public class ProdutoDAO {
 		
 	}
 	public void salvar(Produto produto) throws SQLException {
+
+		
 		String sql = "insert into produto(nome, descricao) values(?,?)";
 		
 		try(PreparedStatement psmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -34,5 +38,22 @@ public class ProdutoDAO {
 			}		
 		}
 		
+	}
+	
+	public List<Produto> listar() throws SQLException{
+		List<Produto> produtos = new ArrayList<Produto>();
+		String sql = "select * from produto";
+		try(PreparedStatement pstm = connection.prepareStatement(sql)){
+			pstm.execute();
+			try(ResultSet rst = pstm.getResultSet()){
+				while(rst.next()) {
+					Produto produto = new Produto(rst.getInt(1), rst.getNString(2), rst.getString(3));
+					
+					produtos.add(produto);
+				}
+			}
+			
+		}
+		return produtos;
 	}
 }
