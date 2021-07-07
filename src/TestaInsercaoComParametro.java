@@ -21,9 +21,10 @@ public class TestaInsercaoComParametro {
 			try(PreparedStatement stm = connection.prepareStatement("insert into produto(nome, descricao) values(?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 		
 			
-			adicionarVariavel("Mouse", "Mouse sem fio", stm);
-			adicionarVariavel("SmartTV", "45 polegadas", stm);
+//			adicionarVariavel("Mouse", "Mouse sem fio", stm);
+//			adicionarVariavel("SmartTV", "45 polegadas", stm);
 			adicionarVariavel("Rádio", "Rádio de bateria", stm);
+			//adicionarVariavel("Playstation", "Playstation 4", stm);
 			
 			//Caso não haja nenhum erro na adição dos produtos, eles serão adicionados graças aos produtos
 			connection.commit();
